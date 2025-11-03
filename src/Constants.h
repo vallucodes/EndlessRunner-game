@@ -5,7 +5,7 @@
 const unsigned int ScreenWidth = 1200;
 const unsigned int ScreenHeight = 800;
 
-const float Ground_height = 700.0f;
+const float Ground_height = 650.0f;
 
 const float Gravity = 300.0f;
 

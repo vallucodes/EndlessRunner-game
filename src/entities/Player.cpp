@@ -14,7 +14,7 @@ Player::Player(StatePlaying* pState) : m_pState(pState)
 
 bool Player::init()
 {
-	const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("some_yellow_thing.png");
+	const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("some_yellow_thing_old.png");
 	if (pTexture == nullptr)
 		return false;
 
@@ -58,9 +58,9 @@ void Player::update(float dt)
 
 	float dampingAcceleration = m_velocity.y * DampingFactor;
 
-	std::cout << "gravity: " << Gravity << std::endl;
-	std::cout << "vertical: " << m_acceleration.y << std::endl;
-	std::cout << "repel: " << repellingAcceleration << std::endl;
+	// std::cout << "gravity: " << Gravity << std::endl;
+	// std::cout << "vertical: " << m_acceleration.y << std::endl;
+	// std::cout << "repel: " << repellingAcceleration << std::endl;
 	float total_Yacc = Gravity - m_acceleration.y - repellingAcceleration - dampingAcceleration;
 
 	// std::cout << "total acc: " << Yacc << std::endl;
@@ -77,7 +77,7 @@ void Player::update(float dt)
 		if (pGround->distanceTo(this) < m_distance)
 			m_distance = pGround->distanceTo(this);
 	}
-	std::cout << "distance: " << m_distance << std::endl;
+	// std::cout << "distance: " << m_distance << std::endl;
 
 
 	sf::FloatRect bounds = getGlobalBounds();
@@ -94,9 +94,30 @@ void Player::update(float dt)
 
 void Player::render(sf::RenderTarget& target) const
 {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && m_acceleration.y > 0)
+		drawGas(target);
 	m_pSprite->setRotation(m_rotation);
 	m_pSprite->setPosition(m_position);
 	target.draw(*m_pSprite);
+}
+
+void Player::drawGas(sf::RenderTarget &target) const {
+
+	int yDistanceFromPlayer = 10;
+
+	// std::cout << "current pups: " << m_powerUps << std::endl;
+
+	// std::cout << "X: " << offsetX << std::endl;
+	// std::cout << "Y: " << offsetY << std::endl;
+	sf::RectangleShape gas(m_gasSize);
+	gas.setFillColor(sf::Color::Red);
+	gas.setOrigin(sf::Vector2f(0.0f, 0.0f));
+	gas.setRotation(sf::degrees(45));
+	sf::FloatRect playerPos = getGlobalBounds();
+	float gasX = playerPos.position.x - 20.0f;
+	float gasY = playerPos.position.y + playerPos.size.y / 2;
+	gas.setPosition(sf::Vector2f(gasX, gasY));
+	target.draw(gas);
 }
 
 sf::FloatRect Player::getGlobalBounds() const

@@ -22,17 +22,19 @@ class Player final : public Entity
 		void update(float dt) override;
 		void render(sf::RenderTarget& target) const override;
 
+		void drawGas(sf::RenderTarget &target) const;
+
 		sf::FloatRect getGlobalBounds() const;
 
 		bool	m_isMovingUp = false;
 		bool	m_isDead = false;
 	private:
 		sf::Vector2f	m_acceleration;
-		float		m_gas = 100.0f;
+		float			m_gas = 100.0f;
 		float			m_repelForce = 0.0f;
 		float			m_distance = 100.0f;
 
-
+		const sf::Vector2f	m_gasSize = sf::Vector2f(10, 10);
 
 		StatePlaying* m_pState;
 };

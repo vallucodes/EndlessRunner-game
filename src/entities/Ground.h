@@ -5,7 +5,6 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Angle.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics.hpp>
 
 namespace sf { class Sprite; }
 
@@ -23,7 +22,10 @@ class Ground final : public Entity
 		void update(float dt) override;
 		void render(sf::RenderTarget& target) const override;
 
+		bool isKilled() { return m_isKilled; }
+
 		void setScale(const sf::Vector2f& scale);
+		void setIsKilled() { m_isKilled = true; }
 
 		float distanceTo(Player* pOther);
 		bool isCollided(Player* pOther);
@@ -32,4 +34,5 @@ class Ground final : public Entity
 
 	private:
 		sf::Vector2f m_scale = {3.0f, 3.0f};
+		bool m_isKilled = false;
 };

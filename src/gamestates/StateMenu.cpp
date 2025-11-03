@@ -9,7 +9,7 @@
 StateMenu::StateMenu(StateStack& stateStack)
     : m_stateStack(stateStack)
 {
-    
+
 }
 
 bool StateMenu::init()
@@ -22,7 +22,7 @@ bool StateMenu::init()
     if (!m_pText)
         return false;
 
-    m_pText->setString("PRESS <ENTER> TO PLAY");
+    m_pText->setString("PRESS <ENTER> TO PLAY\nPRESS Space to accelerate");
     m_pText->setStyle(sf::Text::Bold);
     sf::FloatRect localBounds = m_pText->getLocalBounds();
     m_pText->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});

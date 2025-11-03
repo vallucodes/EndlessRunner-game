@@ -40,47 +40,47 @@ void drawGrid(sf::RenderWindow& window, float spacing)
 
 int main(int argc, char* argv[])
 {
-    (void)argc;
+	(void)argc;
 
-    // ResourceManager must be instantiated here -- DO NOT CHANGE
-    ResourceManager::init(argv[0]);
+	// ResourceManager must be instantiated here -- DO NOT CHANGE
+	ResourceManager::init(argv[0]);
 
-    sf::RenderWindow window(sf::VideoMode({ScreenWidth, ScreenHeight}), "Runner");
-    window.setKeyRepeatEnabled(false);
+	sf::RenderWindow window(sf::VideoMode({ScreenWidth, ScreenHeight}), "Runner");
+	window.setKeyRepeatEnabled(false);
 
-    StateStack gamestates;
-    if (!gamestates.push<StateMenu>())
-        return -1;
+	StateStack gamestates;
+	if (!gamestates.push<StateMenu>())
+		return -1;
 
-    sf::Clock clock;
-    while (window.isOpen())
-    {
-        sf::Time elapsedTime = clock.restart();
+	sf::Clock clock;
+	while (window.isOpen())
+	{
+		sf::Time elapsedTime = clock.restart();
 
-        IState* pState = gamestates.getCurrentState();
-        if (!pState) return -1;
+		IState* pState = gamestates.getCurrentState();
+		if (!pState) return -1;
 
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-            {
-                return 0;
-            }
-        }
+		while (const std::optional event = window.pollEvent())
+		{
+			if (event->is<sf::Event::Closed>())
+			{
+				return 0;
+			}
+		}
 
-        pState->update(elapsedTime.asSeconds());
-        window.clear(sf::Color::Black);
-        pState->render(window);
+		pState->update(elapsedTime.asSeconds());
+		window.clear(sf::Color(20, 20, 20));
+		pState->render(window);
 
-        // --- INTEGRATE GRID DRAWING HERE ---
-        // Draw the grid with a 50-pixel spacing
-        drawGrid(window, 50.0f);
-        // ------------------------------------
+		// --- INTEGRATE GRID DRAWING HERE ---
+		// Draw the grid with a 50-pixel spacing
+		// drawGrid(window, 50.0f);
+		// ------------------------------------
 
-        window.display();
+		window.display();
 
-        gamestates.performDeferredPops();
-    }
+		gamestates.performDeferredPops();
+	}
 
-    return 0;
+	return 0;
 }

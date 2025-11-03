@@ -2,8 +2,10 @@
 #include "Player.h"
 #include "ResourceManager.h"
 #include <cmath>
+#include <iostream>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics.hpp>
 
 bool Ground::init()
 {
@@ -26,7 +28,9 @@ bool Ground::init()
 
 void Ground::update(float dt)
 {
-    m_position.x -= 200 * dt;
+	m_position.x -= 200 * dt;
+	if (m_position.x < -1000)
+		m_isKilled = true;
 }
 
 void Ground::render(sf::RenderTarget& target) const
@@ -46,46 +50,25 @@ inline float VecLength(sf::Vector2f vec)
 	return sqrtf(vec.x*vec.x + vec.y*vec.y);
 }
 
+// TODO make this differently
 float Ground::distanceTo(Player* pOther)
 {
-    // Get the scaled bounds for both objects (SFML 3.x naming)
-    sf::FloatRect groundBounds = getGlobalBounds();
-    sf::FloatRect playerBounds = pOther->getGlobalBounds();
+	sf::FloatRect groundBounds = getGlobalBounds();
+	sf::FloatRect playerBounds = pOther->getGlobalBounds();
 
-    // 1. HORIZONTAL OVERLAP CHECK
-    // This is the critical step to ensure the player is above THIS ground piece.
-    bool horizontallyOverlapping =
-        // Player's right edge is to the right of the ground's left edge
-        (playerBounds.position.x + playerBounds.size.x > groundBounds.position.x) &&
-        // Player's left edge is to the left of the ground's right edge
-        (playerBounds.position.x < groundBounds.position.x + groundBounds.size.x);
+	bool horizontallyOverlapping =
+		(playerBounds.position.x + playerBounds.size.x > groundBounds.position.x) &&
+		(playerBounds.position.x < groundBounds.position.x + groundBounds.size.x);
 
-    if (!horizontallyOverlapping)
-    {
-        // If there is no horizontal overlap, this ground piece is irrelevant.
-        // Return a large positive distance to indicate no collision or contact.
-        return 9999.0f;
-    }
+	if (!horizontallyOverlapping)
+		return 9999.0f;
 
-    // 2. VERTICAL SEPARATION CALCULATION (Only if horizontally aligned)
+	float groundTopY = groundBounds.position.y;
+	float playerBottomY = playerBounds.position.y + playerBounds.size.y;
+	float verticalDistance = groundTopY - playerBottomY;
 
-    // Y-coordinate of the Ground's top surface (top edge)
-    float groundTopY = groundBounds.position.y;
-
-    // Y-coordinate of the Player's bottom edge
-    float playerBottomY = playerBounds.position.y + playerBounds.size.y;
-
-    // The distance is the vertical gap: Ground Top Y - Player Bottom Y.
-    // Result:
-    //   > 0: Player is ABOVE the ground (e.g., distance = 10 means 10px above)
-    //   = 0: Player is TOUCHING the ground
-    //   < 0: Player is PENETRATING the ground (overlap)
-    float verticalDistance = groundTopY - playerBottomY;
-
-    return verticalDistance;
+	return verticalDistance;
 }
-
-#include <SFML/Graphics.hpp>
 
 bool Ground::isCollided(Player* pOther)
 {
@@ -95,5 +78,8 @@ bool Ground::isCollided(Player* pOther)
 	if (playerBounds.findIntersection(groundBounds) == std::nullopt)
 		return false;
 	else
+	{
+		std::cout << "collided\n";
 		return true;
+	}
 }
