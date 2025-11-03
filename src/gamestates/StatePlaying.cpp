@@ -31,7 +31,6 @@ bool StatePlaying::init()
 	if (pStartingGround->init())
 	{
 		pStartingGround->setScale(sf::Vector2f(80.0f, 3.0f));
-		sf::FloatRect bounds = pStartingGround->getGlobalBounds();
 
 		float posX = ScreenWidth / 2.0f;
 		float posY = Ground_height + 100;
@@ -51,7 +50,6 @@ void StatePlaying::update(float dt)
 	m_timeUntilEnemySpawn -= dt;
 	m_timeUntilGroundSpawn -= dt;
 	m_timeUntilBigEnemySpawn -= dt;
-	m_timeUntilRoofLvlUp -= dt;
 
 	// std::cout << "m_timeUntilEnemySpawn: " << m_timeUntilEnemySpawn <<  std::endl;
 	// std::cout << "m_timeUntilGroundSpawn: " << m_timeUntilGroundSpawn <<  std::endl;
@@ -61,27 +59,23 @@ void StatePlaying::update(float dt)
 	{
 		m_timeUntilEnemySpawn = enemySpawnInterval;
 		std::unique_ptr<Enemy> pEnemy = std::make_unique<Enemy>();
-		if (m_timeUntilBigEnemySpawn < 0.0f)
+		sf::Vector2f scale = m_scaleFactors;
+		if (m_timeUntilBigEnemySpawn < 0.0f && m_enemyLvlUps < 3)
 		{
-			if (pEnemy->init(5.0f))
-			{
-				sf::FloatRect bounds = pEnemy->getGlobalBounds();
-				float yOffset = m_groundAmplitude * std::sin(m_waveOffsetGround * m_groundFrequency);
-				float yPos = Ground_height + bounds.size.y / 2.0f - yOffset - bounds.size.y;
-				pEnemy->setPosition(sf::Vector2f(ScreenWidth, yPos));
-				m_enemies.push_back(std::move(pEnemy));
-			}
+			m_enemyLvlUps++;
+			if (m_enemyLvlUps % 2)
+				m_scaleFactors = sf::Vector2f(m_scaleFactors.x, m_scaleFactors.y + 2.5f);
+			else
+				m_scaleFactors = sf::Vector2f(m_scaleFactors.x + 2.5f, m_scaleFactors.y);
+			m_timeUntilBigEnemySpawn = enemyLvlInterval;
 		}
-		else
+		if (pEnemy->init(scale))
 		{
-			if (pEnemy->init())
-			{
-				sf::FloatRect bounds = pEnemy->getGlobalBounds();
-				float yOffset = m_groundAmplitude * std::sin(m_waveOffsetGround * m_groundFrequency);
-				float yPos = Ground_height + bounds.size.y / 2.0f - yOffset - bounds.size.y;
-				pEnemy->setPosition(sf::Vector2f(ScreenWidth, yPos));
-				m_enemies.push_back(std::move(pEnemy));
-			}
+			sf::FloatRect bounds = pEnemy->getGlobalBounds();
+			float yOffset = m_groundAmplitude * std::sin(m_waveOffsetGround * m_groundFrequency);
+			float yPos = Ground_height + bounds.size.y / 2.0f - yOffset - bounds.size.y;
+			pEnemy->setPosition(sf::Vector2f(ScreenWidth, yPos));
+			m_enemies.push_back(std::move(pEnemy));
 		}
 	}
 
@@ -93,15 +87,17 @@ void StatePlaying::update(float dt)
 		if (pGround->init())
 		{
 			sf::FloatRect bounds = pGround->getGlobalBounds();
+
 			float horizontalDistancePerTile = 2.0f * groundSpawnInterval;
 			if (m_totalPassedTime > 10)
 				horizontalDistancePerTile = 8.0f * groundSpawnInterval;
 			if (m_totalPassedTime > 20)
 				horizontalDistancePerTile = 15.0f * groundSpawnInterval;
 			m_waveOffsetGround += horizontalDistancePerTile;
-			// std::cout << "m_waveOffset: " << m_waveOffset <<  std::endl;
+
 			float yOffset = m_groundAmplitude * std::sin(m_waveOffsetGround * m_groundFrequency);
 			float yPos = Ground_height + bounds.size.y / 2.0f - yOffset;
+
 			pGround->setPosition(sf::Vector2f(ScreenWidth, yPos));
 			m_grounds.push_back(std::move(pGround));
 		}
@@ -111,20 +107,11 @@ void StatePlaying::update(float dt)
 			std::unique_ptr<Ground> pRoof = std::make_unique<Ground>();
 			if (pRoof->init())
 			{
-				sf::FloatRect bounds = pRoof->getGlobalBounds();
-				// m_waveOffset += 2.0f;
-				float horizontalDistancePerTile = 2.0f * groundSpawnInterval;
-				float yOffset = 0;
-				if (m_timeUntilRoofLvlUp < 0)
-				{
-					m_timeUntilRoofLvlUp = roofLvlInterval;
-					m_roofAmplitude += 5;
-				}
+				float horizontalDistancePerTile = 5.0f * groundSpawnInterval;
 				m_waveOffsetRoof += horizontalDistancePerTile;
-				// std::cout << "m_waveOffset: " << m_waveOffset <<  std::endl;
 				float ySinOffset = m_roofAmplitude * std::sin(m_waveOffsetRoof * m_groundFrequency);
-				float yPos = 50 - ySinOffset + yOffset;
-				// std::cout << "yPos: " << yPos <<  std::endl;
+				float yPos = 50 - ySinOffset + m_yOffset;
+
 				pRoof->setPosition(sf::Vector2f(ScreenWidth, yPos));
 				m_roofs.push_back(std::move(pRoof));
 			}
@@ -156,10 +143,10 @@ void StatePlaying::update(float dt)
 		pRoof->update(dt);
 	}
 
-	updateCollisions();
+	updateCollisionsAndDead();
 }
 
-void StatePlaying::updateCollisions() {
+void StatePlaying::updateCollisionsAndDead() {
 	// Detect player collisions with enemies
 	for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
 	{
@@ -190,7 +177,7 @@ void StatePlaying::updateCollisions() {
 	}
 
 	//remove ground out of scope
-	int i = 0;
+	long unsigned int i = 0;
 	while (i < m_grounds.size())
 	{
 		if (m_grounds[i]->isKilled())

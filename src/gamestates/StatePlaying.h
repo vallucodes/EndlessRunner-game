@@ -24,27 +24,28 @@ class StatePlaying : public IState
 
 		std::vector<Ground*> getGrounds() const;
 
-		// Player* getPlayer();
-
 	private:
 		static constexpr const float enemySpawnInterval = 3.0f;
 		static constexpr const float groundSpawnInterval = 0.1f;
-		static constexpr const float roofLvlInterval = 3.0f;
+		static constexpr const float enemyLvlInterval = 20.0f;
 
 		static constexpr float m_groundAmplitude = 100.0f;
-		float m_roofAmplitude = 100.0f;
+		float m_roofAmplitude = 177.0f;
 		static constexpr float m_groundFrequency = 0.05f;
+		float m_yOffset = 0.0f;
 
 		sf::Clock m_deathTimer;
 		float m_totalPassedTime;
 
 		float m_waveOffsetGround = 100.0f;
 		float m_waveOffsetRoof = 300.0f;
+		sf::Vector2f m_scaleFactors = sf::Vector2f(2.5f, 2.5f);
 
 		float m_timeUntilEnemySpawn = 5.0f;
 		float m_timeUntilGroundSpawn = groundSpawnInterval;
-		float m_timeUntilBigEnemySpawn = 15.0f;
-		float m_timeUntilRoofLvlUp = 5.0f;
+		float m_timeUntilBigEnemySpawn = 25.0f;
+
+		int m_enemyLvlUps = 0;
 
 		StateStack& m_stateStack;
 
@@ -56,5 +57,5 @@ class StatePlaying : public IState
 		sf::RectangleShape m_ground;
 		bool m_hasPauseKeyBeenReleased = true;
 
-		void updateCollisions();
+		void updateCollisionsAndDead();
 };

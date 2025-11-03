@@ -14,7 +14,7 @@ Player::Player(StatePlaying* pState) : m_pState(pState)
 
 bool Player::init()
 {
-	const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("some_yellow_thing_old.png");
+	const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("some_yellow_thing.png");
 	if (pTexture == nullptr)
 		return false;
 
@@ -34,15 +34,13 @@ bool Player::init()
 
 void Player::update(float dt)
 {
-	m_gas = std::min(m_gas + 80 * dt, 100.0f);
+	m_gas = std::min(m_gas + 60 * dt, 100.0f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 	{
-		if (!(m_gas - 200 * dt < 0))
+		if (!(m_gas - 300 * dt < 0))
 		{
-			// std::cout << "accelerating" << std::endl;
 			m_acceleration.y = PlayerVerticalAcceleration;
 			m_gas = m_gas - 300 * dt;
-			// m_gas = std::max(m_gas - 3000 * deltaTime, 0.0f);
 		}
 		else
 			m_acceleration.y = 0;
@@ -50,23 +48,12 @@ void Player::update(float dt)
 	else
 		m_acceleration.y = 0;
 
-	// std::cout << "gas: " << m_gas << std::endl;
-	// std::cout << "distance: " << m_distance << std::endl;
-
-	float repellingAcceleration = std::clamp(30.0f /  m_distance * Gravity, 0.0f, 1000.0f);
-
-
+	float repellingAcceleration = std::clamp(ReppellinForceCoefficient /  m_distance * Gravity, 0.0f, 1000.0f);
 	float dampingAcceleration = m_velocity.y * DampingFactor;
 
-	// std::cout << "gravity: " << Gravity << std::endl;
-	// std::cout << "vertical: " << m_acceleration.y << std::endl;
-	// std::cout << "repel: " << repellingAcceleration << std::endl;
 	float total_Yacc = Gravity - m_acceleration.y - repellingAcceleration - dampingAcceleration;
 
-	// std::cout << "total acc: " << Yacc << std::endl;
-
 	m_velocity.y += total_Yacc * dt;
-
 	m_position.y += m_velocity.y * dt;
 
 	// save distance to ground
@@ -77,14 +64,6 @@ void Player::update(float dt)
 		if (pGround->distanceTo(this) < m_distance)
 			m_distance = pGround->distanceTo(this);
 	}
-	// std::cout << "distance: " << m_distance << std::endl;
-
-
-	sf::FloatRect bounds = getGlobalBounds();
-	float halfHeight = bounds.size.y / 2.0f;
-
-	// m_distance = Ground_height - (m_position.y + halfHeight);
-	// std::cout << "2distance: " << m_distance << std::endl;
 
 	if (m_distance < 0.0f)
 	{
@@ -103,19 +82,13 @@ void Player::render(sf::RenderTarget& target) const
 
 void Player::drawGas(sf::RenderTarget &target) const {
 
-	int yDistanceFromPlayer = 10;
-
-	// std::cout << "current pups: " << m_powerUps << std::endl;
-
-	// std::cout << "X: " << offsetX << std::endl;
-	// std::cout << "Y: " << offsetY << std::endl;
 	sf::RectangleShape gas(m_gasSize);
 	gas.setFillColor(sf::Color::Red);
 	gas.setOrigin(sf::Vector2f(0.0f, 0.0f));
 	gas.setRotation(sf::degrees(45));
 	sf::FloatRect playerPos = getGlobalBounds();
-	float gasX = playerPos.position.x - 20.0f;
-	float gasY = playerPos.position.y + playerPos.size.y / 2;
+	float gasX = playerPos.position.x - 5.0f;
+	float gasY = playerPos.position.y + playerPos.size.y / 2 - m_gasSize.y / 2 - 1;
 	gas.setPosition(sf::Vector2f(gasX, gasY));
 	target.draw(gas);
 }

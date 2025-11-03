@@ -24,7 +24,7 @@ bool Enemy::init()
     return true;
 }
 
-bool Enemy::init(float scale)
+bool Enemy::init(sf::Vector2f scale)
 {
     const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("enemy.png");
     if (pTexture == nullptr)
@@ -37,7 +37,7 @@ bool Enemy::init(float scale)
     sf::FloatRect localBounds = m_pSprite->getLocalBounds();
     m_pSprite->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
     m_pSprite->setPosition(m_position);
-    m_pSprite->setScale(sf::Vector2f(scale, scale));
+    m_pSprite->setScale(sf::Vector2f(scale.x, scale.y));
     m_collisionRadius = collisionRadius;
 
     return true;

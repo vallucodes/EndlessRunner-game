@@ -26,10 +26,10 @@ public:
     const sf::Angle& getRotation() const { return m_rotation; }
     void setRotation(const sf::Angle& rotation) { m_rotation = rotation; };
 
-    const float getCollisionRadius() { return m_collisionRadius; }
+    // const float getCollisionRadius() { return m_collisionRadius; }
 
-    const int getHealth() const { return m_health; }
-    void setHealth(int health) { m_health = health; }
+    // const int getHealth() const { return m_health; }
+    // void setHealth(int health) { m_health = health; }
 
 protected:
     sf::Vector2f m_position;

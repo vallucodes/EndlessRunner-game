@@ -1,5 +1,7 @@
 #include "ResourceManager.h"
 #include "gamestates/StateStack.h"
+#include "gamestates/StatePaused.h"
+#include "gamestates/StateDeath.h"
 #include "gamestates/IState.h"
 #include "gamestates/StateMenu.h"
 #include "Constants.h"
@@ -9,34 +11,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
-
-// --- NEW FUNCTION: DRAW GRID ---
-void drawGrid(sf::RenderWindow& window, float spacing)
-{
-    const sf::Vector2u windowSize = window.getSize();
-    const float thickness = 1.0f; // Thickness of the grid lines
-    const sf::Color color = sf::Color(100, 100, 100, 150); // Gray with some transparency
-
-    // 1. Draw Vertical Lines
-    for (float x = spacing; x < windowSize.x; x += spacing)
-    {
-        sf::RectangleShape line({thickness, (float)windowSize.y});
-        line.setPosition({x, 0.0f});
-        line.setFillColor(color);
-        window.draw(line);
-    }
-
-    // 2. Draw Horizontal Lines
-    for (float y = spacing; y < windowSize.y; y += spacing)
-    {
-        sf::RectangleShape line({(float)windowSize.x, thickness});
-        line.setPosition({0.0f, y});
-        line.setFillColor(color);
-        window.draw(line);
-    }
-}
-// --- END NEW FUNCTION ---
-
 
 int main(int argc, char* argv[])
 {
@@ -52,6 +26,9 @@ int main(int argc, char* argv[])
 	if (!gamestates.push<StateMenu>())
 		return -1;
 
+	float timeScale = 1.0f;
+	float totalElapsedTime = 0;
+
 	sf::Clock clock;
 	while (window.isOpen())
 	{
@@ -60,6 +37,24 @@ int main(int argc, char* argv[])
 		IState* pState = gamestates.getCurrentState();
 		if (!pState) return -1;
 
+		bool isPaused = (dynamic_cast<StatePaused*>(pState) != nullptr);
+		bool isMenu = (dynamic_cast<StateMenu*>(pState) != nullptr);
+		if (!isPaused && !isMenu)
+		{
+			totalElapsedTime += elapsedTime.asSeconds();;
+			if (totalElapsedTime > 20.0f)
+			{
+				timeScale += 0.2f;
+				totalElapsedTime = 0.0f;
+			}
+		}
+
+		bool isDeath = (dynamic_cast<StateDeath*>(pState) != nullptr);
+		if (isDeath)
+		{
+			timeScale = 1.0f;
+			totalElapsedTime = 0.0f;
+		}
 		while (const std::optional event = window.pollEvent())
 		{
 			if (event->is<sf::Event::Closed>())
@@ -67,15 +62,10 @@ int main(int argc, char* argv[])
 				return 0;
 			}
 		}
-
-		pState->update(elapsedTime.asSeconds());
+		float scaledTime = elapsedTime.asSeconds() * timeScale;
+		pState->update(scaledTime);
 		window.clear(sf::Color(20, 20, 20));
 		pState->render(window);
-
-		// --- INTEGRATE GRID DRAWING HERE ---
-		// Draw the grid with a 50-pixel spacing
-		// drawGrid(window, 50.0f);
-		// ------------------------------------
 
 		window.display();
 

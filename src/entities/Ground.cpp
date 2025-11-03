@@ -50,24 +50,21 @@ inline float VecLength(sf::Vector2f vec)
 	return sqrtf(vec.x*vec.x + vec.y*vec.y);
 }
 
-// TODO make this differently
+// This doesnt work if there would be alternative route above the palyer
 float Ground::distanceTo(Player* pOther)
 {
 	sf::FloatRect groundBounds = getGlobalBounds();
 	sf::FloatRect playerBounds = pOther->getGlobalBounds();
 
-	bool horizontallyOverlapping =
-		(playerBounds.position.x + playerBounds.size.x > groundBounds.position.x) &&
-		(playerBounds.position.x < groundBounds.position.x + groundBounds.size.x);
-
-	if (!horizontallyOverlapping)
-		return 9999.0f;
+	if (!((playerBounds.position.x + playerBounds.size.x > groundBounds.position.x) &&
+		(playerBounds.position.x < groundBounds.position.x + groundBounds.size.x)))
+			return 1000000;
 
 	float groundTopY = groundBounds.position.y;
 	float playerBottomY = playerBounds.position.y + playerBounds.size.y;
-	float verticalDistance = groundTopY - playerBottomY;
+	float distance = groundTopY - playerBottomY;
 
-	return verticalDistance;
+	return distance;
 }
 
 bool Ground::isCollided(Player* pOther)
@@ -78,8 +75,5 @@ bool Ground::isCollided(Player* pOther)
 	if (playerBounds.findIntersection(groundBounds) == std::nullopt)
 		return false;
 	else
-	{
-		std::cout << "collided\n";
 		return true;
-	}
 }

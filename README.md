@@ -65,7 +65,9 @@ Upload your work to Google Drive, Dropbox (or some other service), and complete 
 
 ## Your Game's Instructions
 
-Please include any instructions to your game here.
+Space to accelerate
+You die when your spacecraft collides with enemies, ground or roof
+Be mindful with fuel usage
 
 ## Troubleshooting
 
@@ -76,5 +78,3 @@ Your game may not be receiving keyboard inputs. If you see "Detected a keyboard 
     - If you run from Xcode or Visual Studio Code: enable it for that app.
 - Quit and reopen the launcher, then run your game again.
 
-
-rm -rf build/ && cmake -B build && cmake --build build

@@ -19,7 +19,7 @@ class Enemy final : public Entity
 		virtual ~Enemy() = default;
 
 		bool init() override;
-		bool init(float scale);
+		bool init(sf::Vector2f scale);
 		void update(float dt) override;
 		void render(sf::RenderTarget& target) const override;
 
