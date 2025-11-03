@@ -17,7 +17,11 @@ public:
     virtual void render(sf::RenderTarget& target) const = 0;
 
     const sf::Vector2f& getPosition() const { return m_position; }
-    void setPosition(const sf::Vector2f& position) { m_position = position; };
+    void setPosition(const sf::Vector2f& position) {
+		m_position = position;
+		if (m_pSprite)
+			m_pSprite->setPosition(m_position);
+	};
 
     const sf::Angle& getRotation() const { return m_rotation; }
     void setRotation(const sf::Angle& rotation) { m_rotation = rotation; };

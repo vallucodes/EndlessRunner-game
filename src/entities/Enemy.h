@@ -15,8 +15,10 @@ public:
 
     Enemy() = default;
     virtual ~Enemy() = default;
-    
+
     bool init() override;
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
+
+	sf::FloatRect getGlobalBounds() const { return m_pSprite->getGlobalBounds(); }
 };
