@@ -9,11 +9,11 @@ Timelimit for this challenge is 24 hours of planning features without the codeba
 <div style="display: flex; gap: 20px;">
   <div>
     <h3>Original game</h3>
-    <img src="gif/original.gif" width="600"/>
+    <img src="gif/original.gif" width="550"/>
   </div>
   <div>
     <h3>My improved game</h3>
-    <img src="gif/my_game.gif" width="600"/>
+    <img src="gif/my_game.gif" width="550"/>
   </div>
 </div>
 
