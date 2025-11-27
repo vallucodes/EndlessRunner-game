@@ -16,11 +16,6 @@ StatePlaying::StatePlaying(StateStack& stateStack)
 
 bool StatePlaying::init()
 {
-	// m_ground.setSize({ScreenWidth, Ground_height});
-	// m_ground.setPosition({0.0f, Ground_height});
-	// m_ground.setFillColor(sf::Color::Green);
-
-
 	m_pPlayer = std::make_unique<Player>(this);
 	if (!m_pPlayer || !m_pPlayer->init())
 		return false;
@@ -46,13 +41,9 @@ bool StatePlaying::init()
 void StatePlaying::update(float dt)
 {
 	m_totalPassedTime += dt;
-	// std::cout << "m_totalPassedTime: " << m_totalPassedTime <<  std::endl;
 	m_timeUntilEnemySpawn -= dt;
 	m_timeUntilGroundSpawn -= dt;
 	m_timeUntilBigEnemySpawn -= dt;
-
-	// std::cout << "m_timeUntilEnemySpawn: " << m_timeUntilEnemySpawn <<  std::endl;
-	// std::cout << "m_timeUntilGroundSpawn: " << m_timeUntilGroundSpawn <<  std::endl;
 
 	// Spawn enemies
 	if (m_timeUntilEnemySpawn < 0.0f)
@@ -129,19 +120,13 @@ void StatePlaying::update(float dt)
 	m_pPlayer->update(dt);
 
 	for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
-	{
 		pEnemy->update(dt);
-	}
 
 	for (const std::unique_ptr<Ground>& pGround : m_grounds)
-	{
 		pGround->update(dt);
-	}
 
 	for (const std::unique_ptr<Ground>& pRoof : m_roofs)
-	{
 		pRoof->update(dt);
-	}
 
 	updateCollisionsAndDead();
 }
@@ -166,6 +151,7 @@ void StatePlaying::updateCollisionsAndDead() {
 			break;
 		}
 	}
+
 	// Detect player collisions with roof
 	for (const std::unique_ptr<Ground>& pRoof : m_roofs)
 	{
@@ -176,13 +162,12 @@ void StatePlaying::updateCollisionsAndDead() {
 		}
 	}
 
-	//remove ground out of scope
+	// Remove ground out of scope
 	long unsigned int i = 0;
 	while (i < m_grounds.size())
 	{
 		if (m_grounds[i]->isKilled())
 		{
-			// std::cout << "kill ground\n";
 			std::swap(m_grounds[i], m_grounds.back());
 			m_grounds.pop_back();
 			continue;
@@ -190,7 +175,7 @@ void StatePlaying::updateCollisionsAndDead() {
 		i++;
 	}
 
-	//remove enemies out of scope
+	// Remove enemies out of scope
 	i = 0;
 	while (i < m_enemies.size())
 	{

@@ -50,7 +50,7 @@ inline float VecLength(sf::Vector2f vec)
 	return sqrtf(vec.x*vec.x + vec.y*vec.y);
 }
 
-// This doesnt work if there would be alternative route above the palyer
+// This doesnt work if there would be alternative route above the player
 float Ground::distanceTo(Player* pOther)
 {
 	sf::FloatRect groundBounds = getGlobalBounds();

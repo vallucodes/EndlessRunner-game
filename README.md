@@ -1,28 +1,48 @@
 # Supercell Coding Test
-Hi! This is the base code structure for the Supercell coding test.
-The code is basic and plays poorly, so we need YOU to make it better.
 
-## Theme
+This was Supercell coding test. There was given basic game built with SFML library and it had bugs. Theme of the game is "Endless Runner".
 
-This year's theme is "Endless Runner". The starter code gives you a basic, generic infinite runner game.
+Idea of the project was to fix the bugs and add own features to the game to make it more playable and fun.
 
-## Disclaimer - MANDATORY RULES
+Timelimit for this challenge is 24 hours of planning features without the codebase and then 12 hours to code the features.
 
-We strongly recommend that you:
-- Read this README to the end.
-- Keep to the theme.
-- Place assets in the `/assets` folder and use the `ResourceManager` class to get file paths.
-    - Example usage: `ResourceManager::getOrLoadFont("Lavigne.ttf")`
-    - Look in `/src/gamestates/StateMenu.cpp` for examples of loading fonts and textures.
-- DO NOT MODIFY the ResourceManager. We might run your game on a different platform than what you developed on.
-- Avoid modifying the CMakeLists.txt file. We will use Cmake to build your project.
-- (optional) Test on different platforms if you can, to assure your submission builds and functions the same.
+<div style="display: flex; gap: 20px;">
+  <div>
+    <h3>Original game</h3>
+    <img src="gif/original.gif" width="400"/>
+  </div>
+  <div>
+    <h3>My improved game</h3>
+    <img src="gif/my_game.gif" width="400"/>
+  </div>
+</div>
 
-We will build your project with the build steps outlined below. If your submission produces any build errors we will most likely end the evaluation there.
+## Building
+
+Download repository
+``` Bash
+git clone https://github.com/vallucodes/Endless-runner.git
+cd Endless-runner
+```
+
+Compile the project
+
+``` Bash
+cmake -B build
+cmake --build build
+./build/bin/survive
+```
+This builds the executable in `./build/bin/`.
+
+The exact location of the executable may differ depending on your system and compiler. Example locations are `./build/bin/runner` and `./build/bin/Debug/runner.exe`.
+
+## Controls and game instructions
+
+- `Space` to fly up
+- You die when your spacecraft collides with enemies, ground or roof
+- Fuel is quickly exhausted and quickly regenerated
 
 ## Prerequisites
-
-NOTE: Hive computers (should) have these dependencies installed already.
 
 You must have [CMake](https://cmake.org/) version 3.22.1 or later installed to build this project.
 
@@ -41,40 +61,10 @@ sudo apt install \
     libegl1-mesa-dev
 ```
 
-## Building
+## My contribution
 
-Simply run `cmake -B build` and `cmake --build build`. This builds the executable in `./build/bin/`.
-
-The exact location of the executable may differ depending on your system and compiler. Example locations are `./build/bin/shooter` and `./build/bin/Debug/shooter.exe`.
-
-Alternatively, you can specify a generator suited for your toolchain.
-- `cmake -B build -G"Unix Makefiles"`
-- `cmake -B build -G"Visual Studio 17 2022"`
-- `cmake -B build -GXcode`
-
-Run `cmake -G` to list all available generators.
-
-## Submission
-
-Upload your work to Google Drive, Dropbox (or some other service), and complete the provided form with:
-- A link to your submission (remember to check permissions)
-- Your full name
-- Your email address
-
-[**SUBMIT**](https://supr.cl/hive2026submit)
-
-## Your Game's Instructions
-
-Space to accelerate
-You die when your spacecraft collides with enemies, ground or roof
-Be mindful with fuel usage
-
-## Troubleshooting
-
-### MacOS
-Your game may not be receiving keyboard inputs. If you see "Detected a keyboard without any keys" printed to the terminal. You will need to treat the *launcher* as the app that is "monitoring input"
-- Open System Settings -> Privacy & Security -> Input Monitoring
-    - If you run from Terminal or iTerm2: enable it for that app.
-    - If you run from Xcode or Visual Studio Code: enable it for that app.
-- Quit and reopen the launcher, then run your game again.
-
+- Add flying physics with repelling force from ground
+- Fuel usage accelerates player upwards
+- Add appearance of ground and roof
+- Ramping up difficulty with: enemy size growth, speedup of time, steepening ground elevation changes
+- Change color theme to space

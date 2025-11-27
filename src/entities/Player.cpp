@@ -56,7 +56,7 @@ void Player::update(float dt)
 	m_velocity.y += total_Yacc * dt;
 	m_position.y += m_velocity.y * dt;
 
-	// save distance to ground
+	// Save distance to ground
 	m_distance = 1000000;
 	auto pGrounds = m_pState->getGrounds();
 	for (auto& pGround : pGrounds)
