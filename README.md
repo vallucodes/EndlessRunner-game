@@ -17,7 +17,7 @@ Timelimit for this challenge is 24 hours of planning features without the codeba
   </div>
 </div>
 
-## Building
+## How to play
 
 Download repository
 ``` Bash
@@ -66,5 +66,8 @@ sudo apt install \
 - Add flying physics with repelling force from ground
 - Fuel usage accelerates player upwards
 - Add appearance of ground and roof
-- Ramping up difficulty with: enemy size growth, speedup of time, steepening ground elevation changes
+- Ramping up difficulty by
+    - enemy size growth over time
+    - speedup of game over time
+    - steepening ground evelation variation over time
 - Change color theme to space
