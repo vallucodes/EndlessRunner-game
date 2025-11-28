@@ -1,4 +1,4 @@
-# Supercell Coding Test
+# Supercell Coding Competition
 
 This was Supercell coding test. There was given basic game built with SFML library and it had bugs. Theme of the game is "Endless Runner".
 
