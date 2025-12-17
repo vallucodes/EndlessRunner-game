@@ -69,5 +69,5 @@ sudo apt install \
 - Ramping up difficulty by
     - enemy size growth over time
     - speedup of game over time
-    - steepening ground evelation variation over time
+    - steepening ground elevation variation over time
 - Change color theme to space
