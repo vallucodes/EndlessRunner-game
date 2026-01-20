@@ -17,6 +17,15 @@ Timelimit for this challenge is 24 hours of planning features without the codeba
   </div>
 </div>
 
+## My contribution
+
+- Add flying physics with repelling force from ground
+- Fuel usage accelerates player upwards
+- Add appearance of ground and roof
+- Ramping up difficulty by
+    - enemy size growth over time
+    - speedup of game over time
+
 ## How to play
 
 Download repository
@@ -60,14 +69,5 @@ sudo apt install \
     libgl1-mesa-dev \
     libegl1-mesa-dev
 ```
-
-## My contribution
-
-- Add flying physics with repelling force from ground
-- Fuel usage accelerates player upwards
-- Add appearance of ground and roof
-- Ramping up difficulty by
-    - enemy size growth over time
-    - speedup of game over time
     - steepening ground elevation variation over time
 - Change color theme to space
