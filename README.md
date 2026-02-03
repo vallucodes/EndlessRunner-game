@@ -25,6 +25,7 @@ Timelimit for this challenge is 24 hours of planning features without the codeba
 - Ramping up difficulty by
     - enemy size growth over time
     - speedup of game over time
+- Change color theme to space
 
 ## How to play
 
@@ -70,4 +71,3 @@ sudo apt install \
     libegl1-mesa-dev
 ```
     - steepening ground elevation variation over time
-- Change color theme to space
